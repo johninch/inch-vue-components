@@ -19,6 +19,8 @@
 import InchForm from '@/components/form/InchForm.vue';
 import InchFormItem from '@/components/form/InchFormItem.vue';
 import InchInput from '@/components/form/InchInput.vue';
+import create from '@/utils/create';
+import Notice from '@/components/Notice/Notice.vue';
 
 export default {
     components: {
@@ -41,11 +43,15 @@ export default {
     methods: {
         login() {
             this.$refs.loginForm.validate(valid => {
-                if (valid) {
-                    alert('校验通过，可以登录')
-                } else {
-                    alert('登录失败')
-                }
+                // if (valid) {
+                //     alert('校验通过，可以登录')
+                // } else {
+                //     alert('登录失败')
+                // }
+                create(Notice, {
+                    title: '这是弹窗组件呀',
+                    message: valid ? '校验通过，可以登录' : '校验失败'
+                }).show()
             })
         }
     },
