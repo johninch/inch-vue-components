@@ -22,6 +22,11 @@ export default new InchVuex.Store({
       }, 1000)
     }
   },
+  getters: {
+    doubleCounter(state) {
+      return state.counter * 2
+    }
+  },
   modules: {
   }
 })

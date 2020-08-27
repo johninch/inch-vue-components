@@ -4,6 +4,29 @@ class Store {
     constructor(options) {
         this._mutations = options.mutations
         this._actions = options.actions
+        this._wrappedGetters = options.getters
+
+        // 定义computed选项
+        const computed = {}
+        this.getters = {}
+
+        // {doubleCounter(state)}
+        const store = this
+        Object.keys(this._wrappedGetters).forEach(key => {
+            // 获取用户定义的getter
+            const fn = store._wrappedGetters[key]
+            // 转换为computed可以使用无参数形式
+            computed[key] = function() {
+                return fn(store.state)
+            }
+            // 为getters定义只读属性
+            Object.defineProperty(store.getters, key, {
+                get() {
+                    return store._vm[key]
+                }
+            })
+        })
+
         // 创建响应式的state
         // _Vue.util.defineReactive(this, 'state', {})
         // 也可以“借鸡生蛋”
@@ -21,7 +44,8 @@ class Store {
                     // 为什么不希望被代理呢？因为你不希望用户通过$store.counter直接取到值，而是希望通过$store.state.counter取值
                     $$state: options.state
                 }
-            }
+            },
+            computed // getters选项加到实例中
         })
 
         // 修改this指向

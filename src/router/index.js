@@ -8,7 +8,18 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    children: [
+      {
+        // 增加嵌套路由
+        path: '/Home/info',
+        component: {
+          render(h) {
+            return h('div', 'info page')
+          }
+        }
+      }
+    ]
   },
   {
     path: '/view-store',
