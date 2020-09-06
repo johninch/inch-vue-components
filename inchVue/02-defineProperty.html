@@ -1,0 +1,50 @@
+<div id="app"></div>
+<script>
+// Object.defineProperty()
+function defineReactive(obj, key, val) {
+    // 解决嵌套对象问题：如果val是对象，需要递归，obj.baz.a = 10
+    observe(val)
+
+    Object.defineProperty(obj, key, {
+        get() {
+            console.log('get', key, val)
+            return val
+        },
+        set(newVal) {
+            if (val !== newVal) {
+                // 解决赋值是对象的情况：如果newVal是对象，也要做响应式处理，obj.baz = { a: 20 }
+                observe(newVal)
+
+                val = newVal
+                console.log('set', key, val)
+                update()
+            }
+        }
+    })
+}
+
+// 遍历指定数据对象每个key，拦截他们
+function observe(obj) {
+    if(typeof obj !== 'object' || obj === null) {
+        return obj
+    }
+
+    Object.keys(obj).forEach(key => {
+        defineReactive(obj, key, obj[key])
+    })
+}
+
+function set(obj, key, val) {
+    // 解决添加/删除了新属性无法检测的问题：
+    defineReactive(obj, key, val)
+}
+
+const obj = {foo: 'foo', bar: 'bar', baz: {a: 1}}
+
+observe(obj)
+
+obj.baz.a = 2 // 对嵌套的对象，需要递归observe
+obj.baz = { a: 20 } // 重新赋值的对象，未经过响应式处理，需要observe
+obj.qux = 'qux' // 对新添加的属性，未经过响应式处理，需要使用set方法，set(obj, 'qux', 'qux')
+
+</script>
