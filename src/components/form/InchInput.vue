@@ -27,7 +27,7 @@
                 // 插槽还没有被替换层最外层的InchForm，所以无法绑定事件，因此需要另辟蹊径
                 // 参考事件总线eventBus的实现：事件的派发者和监听者，必须是同一个角色，
                 // 如果当前实例InchInput派发时，则在外层使用InchInput时也必须是它自己监听
-                // 同理，考虑让父组件，即 InchFormInput来派发和监听
+                // 同理，考虑让父组件，即 InchFormItem来派发和监听
                 this.$parent.$emit('validate')
             }
         },
